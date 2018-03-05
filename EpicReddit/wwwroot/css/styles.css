@@ -1,0 +1,13 @@
+h1, h3 {
+  font-family: monospace;
+  color: grey;
+  font-style: italic;
+}
+
+body {
+  background-color: #DCE4EB;
+}
+
+button{
+  margin: 30px;
+}
