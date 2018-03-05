@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using EpicReddit.Models;
 using System;
 
 namespace EpicReddit.Controllers
@@ -8,18 +8,18 @@ namespace EpicReddit.Controllers
     public class CommentsController : Controller
     {
 
-        [HttpGet("/comments")]
-        public ActionResult Index()
-        {
-            List<Comment> allComments = Comment.GetAll();
-            return View(allComments);
-        }
+        // [HttpGet("/comments")]
+        // public ActionResult Index()
+        // {
+        //     List<Comment> allComments = Comment.GetAll();
+        //     return View(allComments);
+        // }
 
-        [HttpGet("/comments/new")]
-        public ActionResult CreateForm()
-        {
-            return View();
-        }
+        // [HttpGet("/comments/new")]
+        // public ActionResult CreateForm()
+        // {
+        //     return View();
+        // }
 
         [HttpPost("/comments")]
         public ActionResult Create()
@@ -34,11 +34,11 @@ namespace EpicReddit.Controllers
         {
           Dictionary<string, object> model = new Dictionary<string, object>();
           Comment selectedComment = Comment.Find(id);
-          List<Comment> commentCategories = selectedComment.GetCategories();
-          List<Comment> allCategories = Comment.GetAll();
+          List<Comment> commentPosts = selectedComment.GetPosts();
+          List<Comment> allPosts = Comment.GetAll();
           model.Add("comment", selectedComment);
-          model.Add("commentCategories", commentCategories);
-          model.Add("allCategories", allCategories);
+          model.Add("commentPosts", commentPosts);
+          model.Add("allPosts", allPosts);
           return View(model);
         }
 
