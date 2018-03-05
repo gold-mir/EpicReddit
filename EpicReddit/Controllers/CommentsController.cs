@@ -11,7 +11,8 @@ namespace EpicReddit.Controllers
         [HttpGet("/comments")]
         public ActionResult Index()
         {
-            List<Comment> allComments = Comment.GetAll();
+
+            List<Comment> allComments = new List<Comment>(Comment.GetAll());
             return View(allComments);
         }
 

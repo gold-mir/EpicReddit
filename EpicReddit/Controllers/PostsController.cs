@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using EpicReddit.Models;
@@ -10,7 +11,7 @@ namespace EpicReddit.Controllers
         [HttpGet("/posts")]
         public ActionResult Index()
         {
-            List<Post> allPosts = Post.GetAll();
+            List<Post> allPosts = new List<Post>(Post.GetAll());
             return View(allPosts);
         }
 
