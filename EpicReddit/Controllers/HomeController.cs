@@ -4,12 +4,14 @@ using EpicReddit.Models;
 
 namespace EpicReddit.Controllers
 {
-    public class HomeController : Controller
+  public class HomeController : Controller
+  {
+
+    [HttpGet("/")]
+    public ActionResult Index()
     {
-        [Route("/")]
-        public ActionResult Index()
-        {
-            return View();
-        }
+      List<Posts> allPosts = Posts.GetAll();
+      return View(allPosts);
     }
+  }
 }
