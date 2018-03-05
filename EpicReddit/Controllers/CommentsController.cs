@@ -8,12 +8,22 @@ namespace EpicReddit.Controllers
     public class CommentsController : Controller
     {
 
+<<<<<<< HEAD
         // [HttpGet("/comments")]
         // public ActionResult Index()
         // {
         //     List<Comment> allComments = Comment.GetAll();
         //     return View(allComments);
         // }
+=======
+        [HttpGet("/comments")]
+        public ActionResult Index()
+        {
+
+            List<Comment> allComments = new List<Comment>(Comment.GetAll());
+            return View(allComments);
+        }
+>>>>>>> 611117e2079d5307184b978e073f99d564977e50
 
         // [HttpGet("/comments/new")]
         // public ActionResult CreateForm()
