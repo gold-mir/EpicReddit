@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using ToDoList.Models;
+using EpicReddit.Models;
 using System;
 
 namespace EpicReddit.Controllers
