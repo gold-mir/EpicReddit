@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-// using Microsoft.VisualStudio.TestTools.UnitTesting;
-// using Microsoft.AspNetCore.Mvc;
-// using System.Collections.Generic;
-// using EpicReddit.Controllers;
-// using EpicReddit.Models;
-//
-// namespace EpicReddit.Tests
-// {
-//     [TestClass]
-//     public class HomeControllerTest
-//     {
-//       // [TestMethod]
-//       //     public void Index_ReturnsCorrectView_True()
-//       //     {
-//       //         //Arrange
-//       //         PostsController controller = new PostsController();
-//       //
-//       //         //Act
-//       //         ActionResult indexView = controller.Index();
-//       //         int result = indexView;
-//       //         //Assert
-//       //         Assert.IsInstanceOfType(result, typeof(ViewResult));
-//       //     }
-=======
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
@@ -80,6 +55,5 @@ public class PostsControllerTest
 //               //Assert
 //               Assert.IsInstanceOfType(result, typeof(ViewResult));
 //           }
->>>>>>> Controllers
 //      }
 // }
