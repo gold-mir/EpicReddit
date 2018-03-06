@@ -10,9 +10,9 @@ namespace EpicReddit.Controllers
         [HttpPost("/comments")]
         public ActionResult Create()
         {
-          Comment newComment = new Comment(Request.Form["comment-description"],Request.Form["comment-description"],(Int32.Parse(Request.Form["comment-description"])), Int32.Parse(Request.Form["comment-description"]));
+          Comment newComment = new Comment(Request.Form["comment-description"],Request.Form["comment-description"],(Int32.Parse(Request.Form["comment-description"])));
           newComment.Save();
-          return RedirectToAction("Success", "Home");
+          return RedirectToAction("Home");
         }
         //ONE TASK
         [HttpGet("/comments/{id}")]

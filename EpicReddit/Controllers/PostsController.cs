@@ -11,7 +11,7 @@ namespace EpicReddit.Controllers
         [HttpGet("/posts")]
         public ActionResult Index()
         {
-            List<Post> allPosts = new List<Post>(Post.GetAll());
+            List<Post> allPosts = new List<Post> (Post.GetAll());
             return View(allPosts);
         }
 
