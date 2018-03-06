@@ -197,5 +197,39 @@ namespace EpicReddit.Tests
                 Assert.AreEqual(posts[postIndex].GetID(), page2[i].GetID());
             }
         }
+
+        [TestMethod]
+        public void Post_IsSaved_ChecksDB()
+        {
+            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            newPost.Save();
+            Post newPostFromDB = Post.GetByID(newPost.GetID());
+            newPost.Delete();
+
+            Assert.IsFalse(newPostFromDB.IsSaved());
+        }
+
+        [TestMethod]
+        public void Post_GetComments_0IfEmpty()
+        {
+            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            newPost.Save();
+
+            Comment[] comments = newPost.GetComments();
+
+            Assert.AreEqual(0, comments.Length);
+        }
+
+        [TestMethod]
+        public void Post_GetComments_GetsComments()
+        {
+            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78").Save();
+
+            Comment newComment = new Comment("This is stupid", "dumb_idiot_12", newPost.GetID()).Save();
+
+            Comment[] comments = newPost.GetComments();
+            Assert.AreEqual(1, comments.Length);
+            Assert.AreEqual(newComment.GetID(), comments[0].GetID());
+        }
     }
 }

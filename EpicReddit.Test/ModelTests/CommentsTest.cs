@@ -296,17 +296,5 @@ namespace EpicReddit.Tests
 
             Assert.IsFalse(deepChild.IsSaved());
         }
-
-        [TestMethod]
-        public void Comment_GetChildrenOfPost_GetsChildrenOfPost()
-        {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            newComment.Save();
-
-            Comment[] children = Comment.GetChildrenOfPost(defaultPost);
-
-            Assert.AreEqual(1, children.Length);
-            Assert.AreEqual(children[0].GetID(), newComment.GetID());
-        }
     }
 }

@@ -4,18 +4,19 @@ using MySql.Data.MySqlClient;
 
 namespace EpicReddit.Models
 {
-    public class Post {
+    public class Post
+    {
         private string _title;
         private string _body;
         private int _id;
         private string _posterName;
 
-        public Post(string title, string body, string posterName)
+        public Post(string title, string body, string posterName, int id = -1)
         {
             _title = title;
             _body = body;
             _posterName = posterName;
-            _id = -1;
+            _id = id;
         }
 
         public int GetID()
@@ -40,10 +41,38 @@ namespace EpicReddit.Models
 
         public bool IsSaved()
         {
-            return _id != -1;
+            if(_id == -1)
+            {
+                return false;
+            } else {
+                int count = 0;
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"SELECT COUNT(id) FROM posts WHERE id = {_id};";
+
+                MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+                while(rdr.Read())
+                {
+                    count = rdr.GetInt32(0);
+                }
+
+                DB.Close(conn);
+
+                return count != 0;
+            }
         }
 
-        public void Save()
+        private void AssertIsSaved()
+        {
+            if(!IsSaved())
+            {
+                throw new Exception("Cannot perform this operation on a post that hasn't been saved to the database.");
+            }
+        }
+
+        public Post Save()
         {
             if(IsSaved())
             {
@@ -77,19 +106,12 @@ namespace EpicReddit.Models
             _id = (int)cmd.LastInsertedId;
 
             DB.Close(conn);
-        }
-
-        public Comment[] GetComments()
-        {
-            throw new NotImplementedException();
+            return this;
         }
 
         public void Delete()
         {
-            if(!IsSaved())
-            {
-                throw new Exception("Can't delete a post that hasn't been saved.");
-            }
+            AssertIsSaved();
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -105,10 +127,7 @@ namespace EpicReddit.Models
 
         public void Edit(string newBody)
         {
-            if(!IsSaved())
-            {
-                throw new Exception("Can't edit a post that hasn't been saved.");
-            }
+            AssertIsSaved();
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -126,6 +145,41 @@ namespace EpicReddit.Models
 
             DB.Close(conn);
             _body = newBody;
+        }
+
+        public Comment[] GetComments()
+        {
+            AssertIsSaved();
+
+            List<Comment> result = new List<Comment>();
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"SELECT * FROM comments WHERE comments.post_id = {_id};";
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+            while(rdr.Read())
+            {
+                int newID = rdr.GetInt32(0);
+                string body = rdr.GetString(1);
+                string username = rdr.GetString(2);
+                int postID = rdr.GetInt32(3);
+                int parentCommentID;
+                if(!rdr.IsDBNull(4))
+                {
+                    parentCommentID = rdr.GetInt32(4);
+                } else {
+                    parentCommentID = -1;
+                }
+
+                Comment newComment = new Comment(body, username, postID, newID, parentCommentID);
+                result.Add(newComment);
+            }
+
+            DB.Close(conn);
+            return result.ToArray();
         }
 
         public static Post GetByID(int id)
