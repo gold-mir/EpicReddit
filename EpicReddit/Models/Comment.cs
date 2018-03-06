@@ -12,13 +12,41 @@ namespace EpicReddit.Models
         private int _parentCommentID;
         private int _id;
 
-        public Comment(string body, string username, int postID, int parentCommentID = -1)
+        public Comment(string body, string username, int postID)
         {
             _body = body;
             _username = username;
             _postID = postID;
-            _parentCommentID = parentCommentID;
             _id = -1;
+            _parentCommentID = -1;
+        }
+
+        public bool IsSaved()
+        {
+            if(_id == -1)
+            {
+                return false;
+            } else {
+                bool result = false;
+                MySqlConnection conn = DB.Connection();
+                conn.Open();
+
+                MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+                cmd.CommandText = $"SELECT username FROM comments WHERE id = {_id};";
+
+                MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+                while(rdr.Read())
+                {
+                    string username = rdr.GetString(0);
+                    if(username != "")
+                    {
+                        result = true;
+                    }
+                }
+                DB.Close(conn);
+
+                return result;
+            }
         }
 
         public int GetID()
@@ -41,29 +69,84 @@ namespace EpicReddit.Models
             return _postID;
         }
 
-        public int GetParentCommentID()
-        {
-            return _parentCommentID;
-        }
-        public bool IsSaved()
-        {
-            return _id != -1;
-        }
-
         public void Save()
         {
-          throw new NotImplementedException();
+            if(IsSaved())
+            {
+                throw new Exception("Cannot save an already saved post.");
+            }
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = "INSERT INTO comments (body, username, post_id) VALUES (@Body, @Username, @postID);";
+
+            MySqlParameter newBody = new MySqlParameter();
+            newBody.ParameterName = "@Body";
+            newBody.Value = _body;
+
+            MySqlParameter newUsername = new MySqlParameter();
+            newUsername.ParameterName = "@Username";
+            newUsername.Value = _username;
+
+            MySqlParameter newPostID = new MySqlParameter();
+            newPostID.ParameterName = "@postID";
+            newPostID.Value = _postID;
+
+
+            cmd.Parameters.Add(newBody);
+            cmd.Parameters.Add(newUsername);
+            cmd.Parameters.Add(newPostID);
+
+            cmd.ExecuteNonQuery();
+
+            _id = (int)cmd.LastInsertedId;
+
+            DB.Close(conn);
         }
 
         public void Delete()
         {
-          throw new NotImplementedException();
+            if(!IsSaved())
+            {
+                throw new Exception("Can't delete a post that hasn't been saved to the database.");
+            }
 
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"DELETE FROM comments WHERE id = {_id};";
+
+            cmd.ExecuteNonQuery();
+
+            DB.Close(conn);
+            _id = -1;
         }
 
         public void Edit(string newBody)
         {
-            throw new NotImplementedException();
+            if(!IsSaved())
+            {
+                throw new Exception("Can't edit a post taht hasn't been saved to the database.");
+            }
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"UPDATE comments SET body = @Body WHERE id = {_id};";
+
+            MySqlParameter updateBody = new MySqlParameter();
+            updateBody.ParameterName = "@Body";
+            updateBody.Value = newBody;
+            cmd.Parameters.Add(updateBody);
+
+            cmd.ExecuteNonQuery();
+
+            DB.Close(conn);
+            _body = newBody;
         }
 
         public Post GetParentPost()
@@ -71,7 +154,7 @@ namespace EpicReddit.Models
             throw new NotImplementedException();
         }
 
-        public Comment GetParentComment(string comment)
+        public Comment GetParentComment()
         {
             throw new NotImplementedException();
         }
@@ -81,19 +164,106 @@ namespace EpicReddit.Models
             throw new NotImplementedException();
         }
 
-        public static Comment[] GetAll()
+        public void AddChild(Comment comment)
         {
             throw new NotImplementedException();
         }
 
+        public static Comment[] GetAll()
+        {
+            List<Comment> result = new List<Comment>();
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = "SELECT * FROM comments;";
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            while(rdr.Read())
+            {
+                int id = rdr.GetInt32(0);
+                string body = rdr.GetString(1);
+                string username = rdr.GetString(2);
+                int postID = rdr.GetInt32(3);
+                int parentCommentID;
+                if(!rdr.IsDBNull(4))
+                {
+                    parentCommentID = rdr.GetInt32(4);
+                } else {
+                    parentCommentID = -1;
+                }
+
+                Comment newComment = new Comment(body, username, postID);
+                newComment._id = id;
+                newComment._parentCommentID = parentCommentID;
+                result.Add(newComment);
+            }
+
+            DB.Close(conn);
+
+            return result.ToArray();
+        }
+
         public static Comment GetByID(int id)
+        {
+            Comment result = null;
+
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = $"SELECT * FROM comments WHERE id = {id};";
+
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            while(rdr.Read())
+            {
+                int newID = rdr.GetInt32(0);
+                string body = rdr.GetString(1);
+                string username = rdr.GetString(2);
+                int postID = rdr.GetInt32(3);
+                int parentCommentID;
+                if(!rdr.IsDBNull(4))
+                {
+                    parentCommentID = rdr.GetInt32(4);
+                } else {
+                    parentCommentID = -1;
+                }
+
+                Comment newComment = new Comment(body, username, postID);
+                newComment._id = newID;
+                newComment._parentCommentID = parentCommentID;
+                result = newComment;
+            }
+
+            DB.Close(conn);
+
+            if(result == null)
+            {
+                throw new Exception($"Couldn't find comment with id {id}");
+            }
+
+            return result;
+        }
+
+        public static Comment[] GetChildrenOfPost(Post post)
         {
             throw new NotImplementedException();
         }
 
         public static void DeleteAll()
         {
-            throw new NotImplementedException();
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = "DELETE FROM comments;";
+
+            cmd.ExecuteNonQuery();
+
+            DB.Close(conn);
         }
     }
 }
