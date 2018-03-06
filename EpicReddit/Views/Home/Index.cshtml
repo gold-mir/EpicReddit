@@ -1,15 +1,17 @@
 @{
-  Layout="_Layout";
+    Layout = "_Layout";
 }
+<script src="~/js/test.js"></script>
+<div class="container">
+  <div class="jumbotron">
+    <button type="button" name="logIn" class="btn btn-secondary">Log in</button>
+    <button type="button" name="signUp" class="btn btn-secondary">sign up</button>
+  </div>
 
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-    <link rel="stylesheet" type="text/css" href="~/css/styles.css" />
-    <center><h1><a href="/posts">Posts</a></h1>
-    <h1><a href="/posts/new"></a></h1>/center>
-</body>
-</html>
+  <button type="button" name="createPosts" class="btn btn-warning">Create posts</button>
+  <div class="news" method = "post">
+  <ul>
+    <li>@Model.someMethod()</li>
+  </ul>
+  </div>
+</div>

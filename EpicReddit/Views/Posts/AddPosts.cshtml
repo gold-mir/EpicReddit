@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-    <link rel="stylesheet" type="text/css" href="~/css/styles.css" />
-    <title>Add Posts</title>
-  </head>
-  <body class="container">
-  <h1>Add news</h1>
-  <hr>
+@{
+    Layout = "_Layout";
+}
+<script src="~/js/test.js"></script>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Create Posts</h1>
+  </div>
+
   <form action='/posts/new' method='post'>
     <div class='form-group'>
-      <label for='postsTitle'>Add Post </label>
+      <label for='postsTitle'>Add Title </label>
       <input id='postsTitle' name='postsTitle' class='form-control' type='text'>
+      <label for='postBody'>Add Contents </label>
+      <input id='postBody' name='postBody' class='form-control' type='text'>
     </div>
-    <button type='submit' class='btn'>Submit</button>
+    <button type='submit' class="btn btn-warning">Submit</button>
   </form>
-</body>
-</html>
+</div>
