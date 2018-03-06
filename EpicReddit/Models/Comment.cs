@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 namespace EpicReddit.Models
 {
@@ -43,6 +45,21 @@ namespace EpicReddit.Models
         {
             return _parentCommentID;
         }
+        public bool IsSaved()
+        {
+            return _id != -1;
+        }
+
+        public void Save()
+        {
+          throw new NotImplementedException();
+        }
+
+        public void Delete()
+        {
+          throw new NotImplementedException();
+
+        }
 
         public void Edit(string newBody)
         {
@@ -54,7 +71,7 @@ namespace EpicReddit.Models
             throw new NotImplementedException();
         }
 
-        public Comment GetParentComment()
+        public Comment GetParentComment(string comment)
         {
             throw new NotImplementedException();
         }

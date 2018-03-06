@@ -24,7 +24,7 @@ namespace EpicReddit.Controllers
         [HttpPost("/posts")]
         public ActionResult Create()
         {
-          Post newPost = new Post(Request.Form["post-name"]);
+          Post newPost = new Post(Request.Form["postsTitle"], Request.Form["postsBody"], Request.Form["posterName"]);
           newPost.Save();
           return RedirectToAction("Home");
         }
@@ -33,9 +33,9 @@ namespace EpicReddit.Controllers
         public ActionResult PostDetail(int id)
         {
             Dictionary<string, object> model = new Dictionary<string, object>();
-            Post selectedPost = Post.Find(id);
-            List<Comment> postComments = selectedPost.GetComments();
-            List<Comment> allComments = Comment.GetAll();
+            Post selectedPost = Post.GetByID(id);
+            Comment[] postComments = selectedPost.GetComments();
+            Comment[] allComments = Comment.GetAll();
             model.Add("post", selectedPost);
             model.Add("postComments", postComments);
             model.Add("allComments", allComments);
@@ -45,22 +45,22 @@ namespace EpicReddit.Controllers
         [HttpPost("/posts/{postId}/comments/new")]
         public ActionResult AddComment(int postId)
         {
-            Post post = Post.Find(postId);
-            Comment comment = Comment.Find(Int32.Parse(Request.Form["comment-id"]));
-            post.AddComment(comment);
+            Post post = Post.GetByID(postId);
+             Comment comment = Comment.GetByID(Int32.Parse(Request.Form["comment-id"]));
+            // Post.GetTitle(comment);
             return RedirectToAction("Home");
         }
         [HttpGet("/posts/{postId}/update")]
         public ActionResult UpdateForm(int postId)
         {
-          Post thisPost = Post.Find(postId);
+          Post thisPost = Post.GetByID(postId);
           return View("update", thisPost);
         }
 
         [HttpPost("/posts{postId}/update")]
         public ActionResult Update(int postId)
         {
-          Post thisPost = Post.Find(postId);
+          Post thisPost = Post.GetByID(postId);
           thisPost.Edit(Request.Form["newname"]);
           return RedirectToAction("Index");
         }
@@ -68,7 +68,7 @@ namespace EpicReddit.Controllers
         [HttpGet("/posts/{postId}/delete")]
         public ActionResult DeleteOne(int postId)
         {
-          Post thisPost = Post.Find(postId);
+          Post thisPost = Post.GetByID(postId);
           thisPost.Delete();
           return RedirectToAction("index");
         }
