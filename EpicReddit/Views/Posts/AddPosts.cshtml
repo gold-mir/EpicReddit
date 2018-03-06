@@ -4,21 +4,17 @@
     <meta charset="utf-8">
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
     <link rel="stylesheet" type="text/css" href="~/css/styles.css" />
-    <title>Add customer</title>
+    <title>Add Posts</title>
   </head>
   <body class="container">
   <h1>Add news</h1>
   <hr>
-  <form action='/AddPosts' method='post'>
+  <form action='/posts/new' method='post'>
     <div class='form-group'>
-      <label for='postsTitle'>Add Title: </label>
+      <label for='postsTitle'>Add Post </label>
       <input id='postsTitle' name='postsTitle' class='form-control' type='text'>
     </div>
-    <div class='form-group'>
-      <label for='postsBody'>Add Body: </label>
-      <input id='postsBody' name='postsBody' class='form-control' type='text'>
-    </div>
-    <button type='submit' class='btn'>Summit</button>
+    <button type='submit' class='btn'>Submit</button>
   </form>
 </body>
 </html>
