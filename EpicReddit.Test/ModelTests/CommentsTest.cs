@@ -10,16 +10,17 @@ namespace EpicReddit.Tests
     {
         public void Dispose()
         {
-            Post.DeleteAll();
-
-            Comment.DeleteAll();
+            User.DeleteAll();
         }
 
         public Post defaultPost;
+        public User defaultUser;
 
         public CommentsTest()
         {
-            defaultPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            defaultUser = User.Create("gold-mir", "insecurepassword43");
+
+            defaultPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             defaultPost.Save();
         }
 
@@ -33,7 +34,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comments_GetAll_GetsAllComments()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
 
             Assert.AreEqual(1, Comment.GetAll().Length);
@@ -42,7 +43,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Save_ErrorsIfAlreadySaved()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
 
             Exception ex = null;
@@ -64,7 +65,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Save_ErrorsIfBadPostID()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", -30);
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), -30);
             Exception ex = null;
 
             try
@@ -82,7 +83,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_GetID_IsNegativeIfNotSaved()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             int oldID = newComment.GetID();
 
             newComment.Save();
@@ -94,7 +95,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_GetByID_GetsCommentByID()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
 
             Comment newCommentFromDB = Comment.GetByID(newComment.GetID());
@@ -123,7 +124,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Delete_DeletesComment()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
             int id = newComment.GetID();
             Exception ex = null;
@@ -145,7 +146,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Delete_ErrorsIfNotSaved()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             Exception ex = null;
 
             try
@@ -163,7 +164,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_IsSaved_ChecksFromDB()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
 
             Comment newCommentFromDB = Comment.GetByID(newComment.GetID());
@@ -175,7 +176,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Edit_EditsBody()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
             string oldBody = newComment.GetBody();
             string newBody = "I REALLY like cats";
@@ -188,7 +189,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Edit_ErrorsIfNotSaved()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             Exception ex = null;
 
             try
@@ -206,7 +207,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_GetParentPost_GetsCorrectPost()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
             Post parent = newComment.GetParentPost();
 
@@ -217,7 +218,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_GetChildComments_DefaultIsEmpty()
         {
-            Comment newComment = new Comment("I like cats", "cat_lover", defaultPost.GetID());
+            Comment newComment = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
             newComment.Save();
 
             Assert.AreEqual(0, newComment.GetChildren().Length);
@@ -226,8 +227,8 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_AddChild_AddsChildComment()
         {
-            Comment parent = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            Comment child = new Comment("I like dogs", "dog_lover_78", defaultPost.GetID());
+            Comment parent = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
+            Comment child = new Comment("I like dogs", defaultUser.GetID(), defaultPost.GetID());
             parent.Save();
             child.Save();
 
@@ -239,8 +240,8 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_AddChild_SetsCorrectParent()
         {
-            Comment parent = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            Comment child = new Comment("I like dogs", "dog_lover_78", defaultPost.GetID());
+            Comment parent = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
+            Comment child = new Comment("I like dogs", defaultUser.GetID(), defaultPost.GetID());
             parent.Save();
             child.Save();
 
@@ -253,8 +254,8 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_GetChildren_ReturnsCorrectChildren()
         {
-            Comment parent = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            Comment child = new Comment("I like dogs", "dog_lover_78", defaultPost.GetID());
+            Comment parent = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
+            Comment child = new Comment("I like dogs", defaultUser.GetID(), defaultPost.GetID());
             parent.Save();
             child.Save();
 
@@ -268,8 +269,8 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Delete_DeletesChildren()
         {
-            Comment parent = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            Comment child = new Comment("I like dogs", "dog_lover_78", defaultPost.GetID());
+            Comment parent = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
+            Comment child = new Comment("I like dogs", defaultUser.GetID(), defaultPost.GetID());
             parent.Save();
             child.Save();
 
@@ -282,9 +283,9 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Comment_Delete_DeletesAllChildren()
         {
-            Comment parent = new Comment("I like cats", "cat_lover", defaultPost.GetID());
-            Comment child = new Comment("I like dogs", "dog_lover_78", defaultPost.GetID());
-            Comment deepChild = new Comment("I like frogs", "frog_luvr", defaultPost.GetID());
+            Comment parent = new Comment("I like cats", defaultUser.GetID(), defaultPost.GetID());
+            Comment child = new Comment("I like dogs", defaultUser.GetID(), defaultPost.GetID());
+            Comment deepChild = new Comment("I like frogs", defaultUser.GetID(), defaultPost.GetID());
             parent.Save();
             child.Save();
             deepChild.Save();

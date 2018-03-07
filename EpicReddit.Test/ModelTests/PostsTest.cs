@@ -8,9 +8,17 @@ namespace EpicReddit.Tests
     [TestClass]
     public class PostsTest : DBTest, IDisposable
     {
+
+        public User defaultUser;
+
+        public PostsTest()
+        {
+            defaultUser = User.Create("gold-mir", "insecurepassword43");
+        }
+
         public void Dispose()
         {
-            Post.DeleteAll();
+            User.DeleteAll();
         }
 
         [TestMethod]
@@ -23,7 +31,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void GetAll_GetsAllPosts()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
 
             newPost.Save();
 
@@ -33,7 +41,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_Save_ErrorsIfAlreadySaved()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
             Exception ex = null;
 
@@ -52,7 +60,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void PostID_IsNegativeIfNotSaved()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             int unsavedID = newPost.GetID();
             int savedID;
 
@@ -66,7 +74,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void GetByID_GetsCorrectPost()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
 
             Post newPostFromDB = Post.GetByID(newPost.GetID());
@@ -95,7 +103,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_Delete_DeletesPost()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
             int id = newPost.GetID();
             Exception ex = null;
@@ -118,7 +126,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_Delete_ErrorIfNotSaved()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             Exception ex = null;
 
             try
@@ -136,7 +144,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_Edit_EditsBody()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
             string oldBody = newPost.GetBody();
             string newBody = "I really like cats";
@@ -150,7 +158,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_Edit_ErrorIfNotSaved()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             Exception ex = null;
 
             try
@@ -173,9 +181,8 @@ namespace EpicReddit.Tests
             {
                 string name = $"New Post #{i+1}";
                 string body = $"This is the body of the post";
-                string userName = $"user{i}";
 
-                Post newPost = new Post(name, body, userName);
+                Post newPost = new Post(name, body, defaultUser.GetID());
                 newPost.Save();
                 posts[i] = newPost;
             }
@@ -201,7 +208,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_IsSaved_ChecksDB()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
             Post newPostFromDB = Post.GetByID(newPost.GetID());
             newPost.Delete();
@@ -212,7 +219,7 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_GetComments_0IfEmpty()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78");
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID());
             newPost.Save();
 
             Comment[] comments = newPost.GetComments();
@@ -223,9 +230,9 @@ namespace EpicReddit.Tests
         [TestMethod]
         public void Post_GetComments_GetsComments()
         {
-            Post newPost = new Post("I like dogs", "I really like dogs", "dog_lover_78").Save();
+            Post newPost = new Post("I like dogs", "I really like dogs", defaultUser.GetID()).Save();
 
-            Comment newComment = new Comment("This is stupid", "dumb_idiot_12", newPost.GetID()).Save();
+            Comment newComment = new Comment("This is stupid", defaultUser.GetID(), newPost.GetID()).Save();
 
             Comment[] comments = newPost.GetComments();
             Assert.AreEqual(1, comments.Length);
