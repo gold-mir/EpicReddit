@@ -4,18 +4,18 @@ using MySql.Data.MySqlClient;
 
 namespace EpicReddit.Models
 {
-    public class User
+    public class ERUser
     {
         private int _id;
         private string _username;
 
-        private User(string username, int id)
+        private ERUser(string username, int id)
         {
             _username = username;
             _id = id;
         }
 
-        public static User Create(string username, string password)
+        public static ERUser Create(string username, string password)
         {
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -39,7 +39,7 @@ namespace EpicReddit.Models
 
             DB.Close(conn);
 
-            return new User(username, id);
+            return new ERUser(username, id);
         }
 
         public int GetID()
@@ -103,9 +103,9 @@ namespace EpicReddit.Models
             return count == 1;
         }
 
-        public static User Get(string username)
+        public static ERUser Get(string username)
         {
-            User result = null;
+            ERUser result = null;
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -125,7 +125,7 @@ namespace EpicReddit.Models
                 int newID = rdr.GetInt32(0);
                 string newUsername = rdr.GetString(1);
 
-                result = new User(newUsername, newID);
+                result = new ERUser(newUsername, newID);
             }
 
             DB.Close(conn);
@@ -133,9 +133,9 @@ namespace EpicReddit.Models
             return result;
         }
 
-        public static User Get(int id)
+        public static ERUser Get(int id)
         {
-            User result = null;
+            ERUser result = null;
 
             MySqlConnection conn = DB.Connection();
             conn.Open();
@@ -150,7 +150,7 @@ namespace EpicReddit.Models
                 int newID = rdr.GetInt32(0);
                 string username = rdr.GetString(1);
 
-                result = new User(username, newID);
+                result = new ERUser(username, newID);
             }
 
             DB.Close(conn);

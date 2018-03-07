@@ -11,7 +11,7 @@ namespace EpicReddit.Models
         private int _id;
         private int _userID;
 
-        public Post(string title, string body, int userID, int id = -1)
+        public Post(string title, string body, int userID, int id = 0)
         {
             _title = title;
             _body = body;
@@ -37,6 +37,12 @@ namespace EpicReddit.Models
         public int GetUserID()
         {
             return _userID;
+        }
+
+        public ERUser GetUser()
+        {
+            AssertIsSaved();
+            return ERUser.Get(_userID);
         }
 
         public bool IsSaved()
@@ -201,16 +207,11 @@ namespace EpicReddit.Models
                 string body = rdr.GetString(2);
                 int userID = rdr.GetInt32(3);
 
-                result = new Post(title, body, userID);
+                result = new Post(title, body, newID);
                 result._id = newID;
             }
 
             DB.Close(conn);
-
-            if(result == null)
-            {
-                throw new Exception($"Couldn't find post with id {id}");
-            }
 
             return result;
         }

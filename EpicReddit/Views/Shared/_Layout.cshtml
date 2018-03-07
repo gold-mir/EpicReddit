@@ -10,6 +10,22 @@
         <title>🤔</title>
     </head>
     <body>
+        <div class="topbar">
+            @{
+                if(ViewBag.showLoginInfo == true)
+                {
+                    if(ViewBag.isLoggedIn == true)
+                    {
+                        var User = ViewBag.user;
+                        <p>Signed in as @(User.GetUsername())</p>
+                        <a href="/users/logout">Sign Out</a>
+                    } else {
+                        <a href="/users/new">Create Account</a>
+                        <a href="/users/loginpage">Sign In</a>
+                    }
+                }
+            }
+        </div>
         @RenderBody()
     </body>
 </html>

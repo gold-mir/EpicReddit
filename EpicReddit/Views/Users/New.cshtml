@@ -4,10 +4,17 @@
 <script src="~/js/test.js"></script>
 <div class="container">
   <div class="jumbotron">
-      <h1>Sign Up!</h1>
+      <h1>Create Account!</h1>
   </div>
 
-  <form action='/' method='post'>
+  @{
+      if(ViewBag.ErrorMessage != null)
+      {
+          <h1>@ViewBag.ErrorMessage</h1>
+      }
+  }
+
+  <form action='/users/create' method='post'>
     <div class='form-group'>
       <label for='userName'>Enter User Name: </label>
       <input id='userName' name='userName' class='form-control' type='text'>

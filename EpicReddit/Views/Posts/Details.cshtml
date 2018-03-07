@@ -1,17 +1,19 @@
 @{
     Layout = "_Layout";
 }
-<script src="~/js/test.js"></script>
+@* <script src="~/js/test.js"></script> *@
 <div class="container">
-  <div class="jumbotron">
+  @* <div class="jumbotron">
     <h1>Your news added!</h1>
-  </div>
-
+  </div> *@
   <h3>@Model.GetTitle()</h3>
+@{
+    string username = Model.GetUser().GetUsername();
+    <h6>By @username</h6>
+}
   <p>@Model.GetBody()</p>
   <button type="submit" name="delete"class="btn btn-secondary">Delete Posts</button>
   <button type="submit" name="edit" class="btn btn-secondary">Edit Posts</button>
   <button type="submit" name="addComment" class="btn btn-secondary">Add comment</button>
-  <p>@Model.GetComment()</p>
 
 </div>

@@ -1,0 +1,19 @@
+@{
+    Layout = "_Layout";
+}
+<script src="~/js/test.js"></script>
+<div class="container">
+  <div class="jumbotron">
+    <h1>Create Posts</h1>
+  </div>
+
+  <form action="/" method="post">
+    <div class="form-group">
+      <label for="postsTitle">Add Title </label>
+      <input id="postsTitle" name="postsTitle" class="form-control" type="text">
+      <label for="postsBody">Add Contents </label>
+      <textarea name="postsBody" id="postsBody" class="form-control" rows="8" cols="80"></textarea>
+    </div>
+    <button type="submit" class="btn btn-warning">Submit</button>
+  </form>
+</div>

@@ -80,40 +80,93 @@ namespace EpicReddit.Controllers
         //   return View();
         // }
 
-        [HttpGet("/posts")]
-    public ActionResult Index()
-    {
-      List<Post> allPosts = new List<Post> (Post.GetAll());
-      return View(allPosts);
-    }
+        [HttpGet("/")]
+        public ActionResult Index()
+        {
+            List<Post> allPosts = new List<Post> (Post.GetAll());
 
-    [HttpGet("/posts/new")]
-    public ActionResult New()
-    {
-      return View();
-    }
+            ControllersHelper.SetLoginData(Request, ViewBag);
 
-    [HttpPost("/posts")]
-    public ActionResult Create()
-    {
-      Post newPost = new Post(Request.Form["postsTitle"], Request.Form["postsBody"],Request.Form["postsTitle"],(Int32.Parse(Request.Form["comment-id"])));
-      newPost.Save();
-      return RedirectToAction("{postid}");
+            return View(allPosts);
+        }
 
-    }
+        [HttpGet("/posts/new")]
+        public ActionResult New()
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            //   string postsTitle = Request.Form["postsTitle"];
+            //   string postsBody = Request.Form["postsBody"];
+            //   Post newPost = new Post(postsTitle, postsBody);
+            //   newPost.Save();
+            return View();
+        }
 
-    [HttpGet("/posts/{id}")]
-    public ActionResult ViewPost(int id)
-    {
-      Dictionary<string, object> model = new Dictionary<string, object>();
-      Post selectedPost = Post.GetByID(id);
-      Comment[] postComments = selectedPost.GetComments();
-      Comment[] allComments = Comment.GetAll();
-      model.Add("post", selectedPost);
-      model.Add("postComments", postComments);
-      model.Add("allComments", allComments);
+        [HttpPost("/")]
+        public ActionResult Create()
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
 
-      return View(model);
-    }
+            string title = Request.Form["postsTitle"];
+            string body = Request.Form["postsBody"];
+
+            if(ViewBag.isLoggedIn)
+            {
+                Post newPost = new Post(title, body, ViewBag.user.GetID());
+                newPost.Save();
+                return Redirect($"/posts/{newPost.GetID()}");
+            } else {
+                return Redirect("/");
+            }
+        }
+
+        [HttpGet("/posts/{id}")]
+        public ActionResult Details(int id)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            Post post = Post.GetByID(id);
+            if(post != null)
+            {
+                return View(post);
+            } else {
+                return Redirect("/");
+            }
+        }
+
+        // [HttpGet("/")]
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // [HttpPost("/posts")]
+        // public ActionResult Create()
+        // {
+        // string postsTitle = Request.Form["postsTitle"];
+        // string postsBody = Request.Form["postsBody"];
+        // Post newPost = new Post(postsTitle, postsBody);
+        // newPost.Save();
+        // return RedirectToAction("/");
+        // }
+
+        // [HttpGet("/posts/{id}")]
+        // public ActionResult PostDetails(int id)
+        // {
+        //   Dictionary<string, object> model = new Dictionary<string, object>();
+        //   Post selectedPost = Post.GetByID(id);
+        //   Comment[] postComments = selectedPost.GetComments();
+        //   Comment[] allComments = Comment.GetAll();
+        //   model.Add("post", selectedPost);
+        //   model.Add("postComments", postComments);
+        //   model.Add("allComments", allComments);
+        //   return View(model);
+        // }
     }
 }
