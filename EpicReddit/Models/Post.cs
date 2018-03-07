@@ -9,13 +9,13 @@ namespace EpicReddit.Models
         private string _title;
         private string _body;
         private int _id;
-        private string _posterName;
+        private int _userID;
 
-        public Post(string title, string body, string posterName, int id = -1)
+        public Post(string title, string body, int userID, int id = -1)
         {
             _title = title;
             _body = body;
-            _posterName = posterName;
+            _userID = userID;
             _id = id;
         }
 
@@ -34,9 +34,9 @@ namespace EpicReddit.Models
             return _body;
         }
 
-        public string GetPosterName()
+        public int GetUserID()
         {
-            return _posterName;
+            return _userID;
         }
 
         public bool IsSaved()
@@ -83,7 +83,7 @@ namespace EpicReddit.Models
             conn.Open();
 
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = "INSERT INTO posts (title, body, username) VALUES (@Title, @Body, @Username);";
+            cmd.CommandText = "INSERT INTO posts (title, body, user_id) VALUES (@Title, @Body, @UserID);";
 
             MySqlParameter newTitle = new MySqlParameter();
             newTitle.ParameterName = "@Title";
@@ -93,13 +93,13 @@ namespace EpicReddit.Models
             newBody.ParameterName = "@Body";
             newBody.Value = _body;
 
-            MySqlParameter newUsername = new MySqlParameter();
-            newUsername.ParameterName = "@Username";
-            newUsername.Value = _posterName;
+            MySqlParameter newUserID = new MySqlParameter();
+            newUserID.ParameterName = "@UserID";
+            newUserID.Value = _userID;
 
             cmd.Parameters.Add(newTitle);
             cmd.Parameters.Add(newBody);
-            cmd.Parameters.Add(newUsername);
+            cmd.Parameters.Add(newUserID);
 
             cmd.ExecuteNonQuery();
 
@@ -164,7 +164,7 @@ namespace EpicReddit.Models
             {
                 int newID = rdr.GetInt32(0);
                 string body = rdr.GetString(1);
-                string username = rdr.GetString(2);
+                int userID = rdr.GetInt32(2);
                 int postID = rdr.GetInt32(3);
                 int parentCommentID;
                 if(!rdr.IsDBNull(4))
@@ -174,7 +174,7 @@ namespace EpicReddit.Models
                     parentCommentID = -1;
                 }
 
-                Comment newComment = new Comment(body, username, postID, newID, parentCommentID);
+                Comment newComment = new Comment(body, userID, postID, newID, parentCommentID);
                 result.Add(newComment);
             }
 
@@ -199,9 +199,9 @@ namespace EpicReddit.Models
                 int newID = rdr.GetInt32(0);
                 string title = rdr.GetString(1);
                 string body = rdr.GetString(2);
-                string username = rdr.GetString(3);
+                int userID = rdr.GetInt32(3);
 
-                result = new Post(title, body, username);
+                result = new Post(title, body, userID);
                 result._id = newID;
             }
 
@@ -232,9 +232,9 @@ namespace EpicReddit.Models
                 int id = rdr.GetInt32(0);
                 string title = rdr.GetString(1);
                 string body = rdr.GetString(2);
-                string username = rdr.GetString(3);
+                int userID = rdr.GetInt32(3);
 
-                Post newPost = new Post(title, body, username);
+                Post newPost = new Post(title, body, userID);
                 newPost._id = id;
                 result.Add(newPost);
             }
@@ -266,9 +266,9 @@ namespace EpicReddit.Models
                 int id = rdr.GetInt32(0);
                 string title = rdr.GetString(1);
                 string body = rdr.GetString(2);
-                string username = rdr.GetString(3);
+                int userID = rdr.GetInt32(3);
 
-                Post newPost = new Post(title, body, username);
+                Post newPost = new Post(title, body, userID);
                 newPost._id = id;
                 result.Add(newPost);
             }

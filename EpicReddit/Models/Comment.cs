@@ -6,16 +6,16 @@ namespace EpicReddit.Models
 {
     public class Comment
     {
-        private string _username;
+        private int _userID;
         private string _body;
         private int _postID;
         private int _parentCommentID;
         private int _id;
 
-        public Comment(string body, string username, int postID, int id = -1, int parentCommentID = -1)
+        public Comment(string body, int userID, int postID, int id = -1, int parentCommentID = -1)
         {
             _body = body;
-            _username = username;
+            _userID = userID;
             _postID = postID;
             _id = id;
             _parentCommentID = parentCommentID;
@@ -58,9 +58,9 @@ namespace EpicReddit.Models
             return _id;
         }
 
-        public string GetUsername()
+        public int GetUserID()
         {
-            return _username;
+            return _userID;
         }
 
         public string GetBody()
@@ -84,15 +84,15 @@ namespace EpicReddit.Models
             conn.Open();
 
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText = "INSERT INTO comments (body, username, post_id) VALUES (@Body, @Username, @postID);";
+            cmd.CommandText = "INSERT INTO comments (body, user_id, post_id) VALUES (@Body, @UserID, @postID);";
 
             MySqlParameter newBody = new MySqlParameter();
             newBody.ParameterName = "@Body";
             newBody.Value = _body;
 
-            MySqlParameter newUsername = new MySqlParameter();
-            newUsername.ParameterName = "@Username";
-            newUsername.Value = _username;
+            MySqlParameter newUserID = new MySqlParameter();
+            newUserID.ParameterName = "@UserID";
+            newUserID.Value = _userID;
 
             MySqlParameter newPostID = new MySqlParameter();
             newPostID.ParameterName = "@postID";
@@ -100,7 +100,7 @@ namespace EpicReddit.Models
 
 
             cmd.Parameters.Add(newBody);
-            cmd.Parameters.Add(newUsername);
+            cmd.Parameters.Add(newUserID);
             cmd.Parameters.Add(newPostID);
 
             cmd.ExecuteNonQuery();
@@ -166,9 +166,9 @@ namespace EpicReddit.Models
                 int parentID = rdr.GetInt32(0);
                 string parentTitle = rdr.GetString(1);
                 string parentBody = rdr.GetString(2);
-                string username = rdr.GetString(3);
+                int userID = rdr.GetInt32(3);
 
-                parent = new Post(parentTitle, parentBody, username, parentID);
+                parent = new Post(parentTitle, parentBody, userID, parentID);
             }
 
             DB.Close(conn);
@@ -202,7 +202,7 @@ namespace EpicReddit.Models
             {
                 int newID = rdr.GetInt32(0);
                 string body = rdr.GetString(1);
-                string username = rdr.GetString(2);
+                int userID = rdr.GetInt32(2);
                 int postID = rdr.GetInt32(3);
                 int parentCommentID;
                 if(!rdr.IsDBNull(4))
@@ -212,7 +212,7 @@ namespace EpicReddit.Models
                     parentCommentID = -1;
                 }
 
-                result = new Comment(body, username, postID, newID);
+                result = new Comment(body, userID, postID, newID);
                 result._parentCommentID = parentCommentID;
             }
 
@@ -237,7 +237,7 @@ namespace EpicReddit.Models
             {
                 int newID = rdr.GetInt32(0);
                 string body = rdr.GetString(1);
-                string username = rdr.GetString(2);
+                int userID = rdr.GetInt32(2);
                 int postID = rdr.GetInt32(3);
                 int parentCommentID;
                 if(!rdr.IsDBNull(4))
@@ -247,7 +247,7 @@ namespace EpicReddit.Models
                     parentCommentID = -1;
                 }
 
-                Comment newComment = new Comment(body, username, postID, newID);
+                Comment newComment = new Comment(body, userID, postID, newID);
                 newComment._parentCommentID = parentCommentID;
                 children.Add(newComment);
             }
@@ -307,7 +307,7 @@ namespace EpicReddit.Models
             {
                 int id = rdr.GetInt32(0);
                 string body = rdr.GetString(1);
-                string username = rdr.GetString(2);
+                int userID = rdr.GetInt32(2);
                 int postID = rdr.GetInt32(3);
                 int parentCommentID;
                 if(!rdr.IsDBNull(4))
@@ -317,7 +317,7 @@ namespace EpicReddit.Models
                     parentCommentID = -1;
                 }
 
-                Comment newComment = new Comment(body, username, postID);
+                Comment newComment = new Comment(body, userID, postID);
                 newComment._id = id;
                 newComment._parentCommentID = parentCommentID;
                 result.Add(newComment);
@@ -344,7 +344,7 @@ namespace EpicReddit.Models
             {
                 int newID = rdr.GetInt32(0);
                 string body = rdr.GetString(1);
-                string username = rdr.GetString(2);
+                int userID = rdr.GetInt32(2);
                 int postID = rdr.GetInt32(3);
                 int parentCommentID;
                 if(!rdr.IsDBNull(4))
@@ -354,7 +354,7 @@ namespace EpicReddit.Models
                     parentCommentID = -1;
                 }
 
-                Comment newComment = new Comment(body, username, postID);
+                Comment newComment = new Comment(body, userID, postID);
                 newComment._id = newID;
                 newComment._parentCommentID = parentCommentID;
                 result = newComment;
