@@ -70,25 +70,33 @@ namespace EpicReddit.Controllers
         [HttpPost("/posts/{postid}/comments/new")]
         public ActionResult Create(int postid)
         {
-            return null;
+              Comment thisComment = Comment.GetByID(postid);
+              thisComment.Edit(Request.Form["newcomment"]);
+              return RedirectToAction("{postid}");
         }
+
 
         [HttpPost("/posts/{postid}/comments/{commentid}/new")]
         public ActionResult CreateReply(int postid, int parentCommentID)
         {
-            return null;
+          Comment thisComment = Comment.GetByID(postid);
+          thisComment.Edit(Request.Form["newchildcomment"]);
+          return RedirectToAction("{postid}");
         }
 
-        [HttpPost("/comments/{id}/edit")]
+        [HttpPost("/comments/{commentid}/edit")]
         public ActionResult Update(int id)
         {
-            return null;
+          Comment thisComment = Comment.GetByID(id);
+              return View(thisComment);
         }
 
-        [HttpPost("/comments/{id}/delete")]
+        [HttpPost("/comments/{commentid}/delete")]
         public ActionResult Delete(int id)
         {
-            return null;
+          Comment thisComment = Comment.GetByID(id);
+              thisComment.Delete();
+              return RedirectToAction("{postid}");
         }
     }
 }
