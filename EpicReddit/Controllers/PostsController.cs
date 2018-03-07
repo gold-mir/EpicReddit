@@ -81,27 +81,39 @@ namespace EpicReddit.Controllers
         // }
 
         [HttpGet("/posts")]
-        public ActionResult Index()
-        {
-            return View();
-        }
+    public ActionResult Index()
+    {
+      List<Post> allPosts = new List<Post> (Post.GetAll());
+      return View(allPosts);
+    }
 
-        [HttpGet("/posts/new")]
-        public ActionResult New()
-        {
-            return View();
-        }
+    [HttpGet("/posts/new")]
+    public ActionResult New()
+    {
+      return View();
+    }
 
-        [HttpPost("/posts")]
-        public ActionResult Create()
-        {
-            return null; //Redirect to post page
-        }
+    [HttpPost("/posts")]
+    public ActionResult Create()
+    {
+      Post newPost = new Post(Request.Form["postsTitle"], Request.Form["postsBody"],Request.Form["postsTitle"],(Int32.Parse(Request.Form["comment-id"])));
+      newPost.Save();
+      return RedirectToAction("{postid}");
 
-        [HttpGet("/posts/{id}")]
-        public ActionResult ViewPost(int id)
-        {
-            return View();
-        }
+    }
+
+    [HttpGet("/posts/{id}")]
+    public ActionResult ViewPost(int id)
+    {
+      Dictionary<string, object> model = new Dictionary<string, object>();
+      Post selectedPost = Post.GetByID(id);
+      Comment[] postComments = selectedPost.GetComments();
+      Comment[] allComments = Comment.GetAll();
+      model.Add("post", selectedPost);
+      model.Add("postComments", postComments);
+      model.Add("allComments", allComments);
+
+      return View(model);
+    }
     }
 }
