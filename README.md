@@ -20,8 +20,6 @@ The application assists users to find information about hiking and post their ne
 
 * HTML
 * CSS
-* JavaScript
-* jQuery
 * MAMP
 * ASP.NET CORE
 * C#
