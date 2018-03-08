@@ -40,7 +40,7 @@ namespace EpicReddit.Controllers
                 newPost.Save();
                 return Redirect($"/posts/{newPost.GetID()}");
             } else
-            
+
             {
                 return Redirect("/");
             }
@@ -59,6 +59,90 @@ namespace EpicReddit.Controllers
             } else {
                 return Redirect("/");
             }
+        }
+
+        [HttpPost("/posts/{id}/delete")]
+        public ActionResult Delete(int id)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            ERUser user = ViewBag.user;
+
+            Post post = Post.GetByID(id);
+            if(post != null && ViewBag.isLoggedIn && user.GetID() == post.GetUserID())
+            {
+                post.Delete();
+            }
+
+            return Redirect("/");
+        }
+
+        [HttpGet("/posts/{id}/edit")]
+        public ActionResult Edit(int id)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            ERUser user = ViewBag.user;
+
+            Post post = Post.GetByID(id);
+            if(post != null && ViewBag.isLoggedIn && user.GetID() == post.GetUserID())
+            {
+                return View(post);
+            } else {
+                return Redirect("/");
+            }
+        }
+
+        [HttpPost("/posts/{id}/update")]
+        public ActionResult Update(int id)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            ERUser user = ViewBag.user;
+
+            Post post = Post.GetByID(id);
+
+            if(post != null && ViewBag.isLoggedIn && user.GetID() == post.GetUserID())
+            {
+                string newBody = Request.Form["postsBody"];
+                post.Edit(newBody);
+                return Redirect($"/posts/{post.GetID()}");
+            } else {
+                return Redirect("/");
+            }
+        }
+
+        [HttpPost("/posts/{id}/comments/create")]
+        public ActionResult AddComment(int id)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            ERUser user = ViewBag.user;
+
+            Post post = Post.GetByID(id);
+            if(post != null && ViewBag.isLoggedIn)
+            {
+                string body = Request.Form["comment-body"];
+                Comment comment = new Comment(body, user.GetID(), post.GetID());
+                comment.Save();
+                return Redirect($"/posts/{id}");
+            } else {
+                return Redirect($"/posts/{id}");
+            }
+        }
+
+        [HttpPost("/posts/{postid}/comments/create/{parentid}")]
+        public ActionResult AddReply(int postid, int parentid)
+        {
+            ControllersHelper.SetLoginData(Request, ViewBag);
+            ERUser user = ViewBag.user;
+            Post post = Post.GetByID(postid);
+            Comment parent = Comment.GetByID(parentid);
+
+            if(post != null && parent != null && ViewBag.isLoggedIn)
+            {
+                string body = Request.Form["comment-body"];
+                Comment comment = new Comment(body, user.GetID(), post.GetID(), -1, parent.GetID());
+                comment.Save();
+                return Redirect($"/posts/{postid}");
+            }
+            return Redirect($"/posts/{postid}");
         }
 
     }
