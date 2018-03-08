@@ -2,12 +2,17 @@
     Layout = "_Layout";
 }
 <div class="container">
+
+    <div class="jumbotron">
+      <h1>Welcome to Epic Hiking News!</h1>
+    </div>
+
     @if (Model.Count != 0)
     {
-        <ul>
+        <ul class="boxmodelPost">
         @foreach (var post in Model)
         {
-            <li><a href= "/posts/@post.GetID()">  @post.GetTitle()</a></li>
+            <li class = "pColor"><a href= "/posts/@post.GetID()">  @post.GetTitle()</a></li>
             @*<a href="/posts/@post.GetId()/update"> Edit</a> || <a href="/posts/@post.GetId()/delete"> Delete</a></li>*@
         }
         </ul>
@@ -17,7 +22,7 @@
     @{
         if(ViewBag.isLoggedIn)
         {
-            <h4><a href="/posts/new"> Add New Post </a></h4>
+            <h4 class="boxmodelPost"><a href="/posts/new"> Add New Post </a></h4>
         }
     }
     <hr>

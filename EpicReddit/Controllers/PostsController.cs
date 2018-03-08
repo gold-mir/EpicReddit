@@ -51,6 +51,8 @@ namespace EpicReddit.Controllers
             Post post = Post.GetByID(id);
             if(post != null)
             {
+                Console.WriteLine(post.GetTitle());
+                Console.WriteLine(post.GetUserID());
                 return View(post);
             } else {
                 return Redirect("/");

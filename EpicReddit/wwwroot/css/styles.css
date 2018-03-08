@@ -1,13 +1,77 @@
-h1, h3 {
+h1, h3, h6{
   font-family: monospace;
   color: grey;
   font-style: italic;
 }
 
 body {
-  background-color: #DCE4EB;
+  background-image: url('../img/backgroundimg.jpeg');
+  background-size: cover;
+  
+}
+
+p {
+  font-style: normal;
+  color:#F5E4CE;
 }
 
 button{
   margin: 30px;
+}
+
+#homeButton {
+  float: right;
+}
+
+.topbar{
+  float: right;
+  border: 5px solid #33312D;
+  padding: 20px;
+  margin-top: 20px;
+  margin-left: : 20px;
+  margin-right: : 20px;
+  margin-bottom: 20px;
+  background-color: #231133;
+}
+
+.boxmodel {
+  border: 5px solid #33312D;
+  padding: 20px;
+  margin-top: 50px;
+  margin-left: : 80px;
+  margin-right: : 80px;
+  margin-bottom: 50px;
+  background-color: #231133;
+
+}
+.boxmodelPost {
+  border: 5px solid #33312D;
+  padding: 20px;
+  margin-top: 50px;
+  margin-left: : 80px;
+  margin-right: : 80px;
+  margin-bottom: 50px;
+  background-color: #231133;
+}
+
+.pColor{
+  color: #F5E4CE;
+}
+
+a {
+  color: #F5E4CE;
+}
+
+label{
+  color: #F5E4CE;
+}
+.jumbotron {
+  padding: 50px;
+  margin-top: 20px;
+  margin-left: : 20px;
+  margin-right: : 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: #231133;
+  h1: #F5E4CE;
 }

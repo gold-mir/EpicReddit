@@ -14,12 +14,12 @@
       }
   }
 
-  <form action='/users/create' method='post'>
+  <form action='/users/create' method='post' class= "boxmodel">
     <div class='form-group'>
       <label for='userName'>Enter User Name: </label>
-      <input id='userName' name='userName' class='form-control' type='text'>
+      <input id='userName' name='userName' class='form-control' type='text' required>
       <label for='password'>Enter Password: </label>
-      <input id='password' name='password' class='form-control' type='text'>
+      <input id='password' name='password' class='form-control' type='text' required>
     </div>
     <button type='submit' class="btn btn-warning">Submit</button>
   </form>
