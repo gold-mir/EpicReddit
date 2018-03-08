@@ -207,8 +207,8 @@ namespace EpicReddit.Models
                 string body = rdr.GetString(2);
                 int userID = rdr.GetInt32(3);
 
-                result = new Post(title, body, newID);
-                result._id = newID;
+                result = new Post(title, body, userID, newID);
+                // result._id = newID;
             }
 
             DB.Close(conn);
