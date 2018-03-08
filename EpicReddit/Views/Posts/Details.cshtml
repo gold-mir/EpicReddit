@@ -2,20 +2,26 @@
     Layout = "_Layout";
 }
 <div class="container">
-<ul>
-  <li class="boxmodelPost">
+
     <h3>@Model.GetTitle()</h3>
     @{
         string username = Model.GetUser().GetUsername();
         <h6>By @username</h6>
     }
+  </div>
     <p>@Model.GetBody()</p>
-    <button type="submit" name="home" class="btn" id = "homeButton"><a href= "/">Home Page</a></button><br>
-    <button type="submit" name="addComment" class="btn btn-secondary">Add comment</button>
-    <button type="submit" name="edit" class="btn btn-secondary">Edit Posts</button>
+    <button type="submit" name="home" class="btn-btn-primary" id = "homeButton"><a href= "/">Home Page</a></button><br>
+    <br><br>
+    Add Comment
+    <form action = "/posts/{postid}/comments/new" method = "post">
+    <textarea name="newcomment" id="newcomment" class="form-control" rows="8" cols="80"></textarea>
+
+  <button type="submit" class="btn btn-warning">Submit</button>
+  </form>
+
+  <br>
+  <form action = "/posts/{postid}/comments/new" method = "post">
+
+<button type="submit" class="btn btn-warning">Edit Posts</button>
+</form>
     <button type="submit" name="delete"class="btn btn-secondary">Delete Posts</button>
-  </li>
-</ul>
-
-
-</div>
