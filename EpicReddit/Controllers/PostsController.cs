@@ -39,7 +39,9 @@ namespace EpicReddit.Controllers
                 Post newPost = new Post(title, body, ViewBag.user.GetID());
                 newPost.Save();
                 return Redirect($"/posts/{newPost.GetID()}");
-            } else {
+            } else
+            
+            {
                 return Redirect("/");
             }
         }
