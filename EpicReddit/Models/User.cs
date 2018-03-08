@@ -14,7 +14,7 @@ namespace EpicReddit.Models
             _username = username;
             _id = id;
         }
-
+        
         public static ERUser Create(string username, string password)
         {
             MySqlConnection conn = DB.Connection();

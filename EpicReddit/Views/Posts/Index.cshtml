@@ -1,25 +1,25 @@
 @{
-  Layout = "_Layout";
+    Layout = "_Layout";
 }
 <div class="container">
-  @if (Model.Count != 0)
-  {
-    <ul>
-      @foreach (var post in Model)
-      {
-        <li><a href= "/posts/@post.GetID()">  @post.GetTitle()</a></li>
-        @*<a href="/posts/@post.GetId()/update"> Edit</a> || <a href="/posts/@post.GetId()/delete"> Delete</a></li>*@
-      }
-    </ul>
-  }
-  <br>
-  <hr>
-  @{
-      if(ViewBag.isLoggedIn)
-      {
-        <h4><a href="/posts/new"> Add New Post </a></h4>
-      }
-  }
-  <hr>
-  <hr>
+    @if (Model.Count != 0)
+    {
+        <ul>
+        @foreach (var post in Model)
+        {
+            <li><a href= "/posts/@post.GetID()">  @post.GetTitle()</a></li>
+            @*<a href="/posts/@post.GetId()/update"> Edit</a> || <a href="/posts/@post.GetId()/delete"> Delete</a></li>*@
+        }
+        </ul>
+    }
+    <br>
+    <hr>
+    @{
+        if(ViewBag.isLoggedIn)
+        {
+            <h4><a href="/posts/new"> Add New Post </a></h4>
+        }
+    }
+    <hr>
+    <hr>
 </div>
