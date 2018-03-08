@@ -148,6 +148,11 @@ namespace EpicReddit.Models
             _body = newBody;
         }
 
+        public ERUser GetUser()
+        {
+            return ERUser.Get(_userID);
+        }
+
         public Post GetParentPost()
         {
             AssertIsSaved();

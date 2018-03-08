@@ -1,6 +1,7 @@
 @{
     Layout = "_Layout";
 }
+@* <script src="js/comments.js"></script> *@
 <div class="container">
 
     <h3>@Model.GetTitle()</h3>
@@ -10,8 +11,49 @@
     }
     <p>@Model.GetBody()</p>
     <button type="submit" name="home"class="btn"><a href= "/">Home Page</a></button><br><br>
-    <button type="submit" name="addComment" class="btn btn-secondary"><a href""/posts/{postid}/comments/new"">Add comment</a></button>
-    <button type="submit" name="edit" class="btn btn-secondary">Edit Posts</button>
-    <button type="submit" name="delete"class="btn btn-secondary">Delete Posts</button>
+    <button type="submit" name="addComment" class="btn btn-secondary"><a href="/posts/{postid}/comments/new">Add comment</a></button>
+    @{
+        if(ViewBag.IsLoggedIn == true && ViewBag.user.GetID() == @Model.GetUser().GetID())
+        {
+            <a href="/posts/@Model.GetID()/edit"><button type="button" name="edit" class="btn btn-secondary">Edit Posts</button></a>
+            <form class="" action="/posts/@Model.GetID()/delete" method="post">
+                <button type="submit" name="delete"class="btn btn-secondary">Delete Post</button>
+            </form>
+        }
+    }
 
+    @{
+        if(ViewBag.IsLoggedIn == true)
+        {
+            <div id="comment-form-container">
+                <form action="/posts/@Model.GetID()/comments/create" method="post" id="comment-form">
+                    <textarea placeholder="Write your comment" name="comment-body" id="comment-body" class="form-control" rows="8" cols="80"></textarea>
+                    <button type="submit" name="submit">Submit</button>
+                </form>
+            </div>
+        }
+    }
+    <div id="comments-area">
+        @{
+            foreach(var comment in Model.GetComments())
+            {
+                string commentUsername = comment.GetUser().GetUsername();
+                <div class="comment card card-body" id="comment-@comment.GetID()">
+                    <h5 class="comment-byline">@commentUsername</h5>
+                    <p class="comment-body">@comment.GetBody()</p>
+                    @{
+                        if(ViewBag.IsLoggedIn == true)
+                        {
+                            <div id="comment-form-container-@comment.GetID()">
+                                <form action="/posts/@Model.GetID()/comments/create/@comment.GetID()" method="post" id="comment-form">
+                                    <textarea placeholder="Write your comment" name="comment-body" id="comment-body" class="form-control" rows="4" cols="80"></textarea>
+                                    <button type="submit" name="submit">Submit</button>
+                                </form>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
 </div>

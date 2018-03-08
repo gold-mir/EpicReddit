@@ -1,0 +1,22 @@
+@{
+    Layout = "_Layout";
+}
+<script src="~/js/test.js"></script>
+<div class="container">
+
+
+    <div class="jumbotron">
+      <h1>Create Posts</h1>
+    </div>
+
+    <div class="boxmodel">
+      <form action="/posts/@Model.GetID()/update" method="post">
+        <div class="form-group">
+            <label for="postsBody">Edit Contents </label>
+            <textarea placeholder="Post Body" name="postsBody" id="postsBody" class="form-control" rows="8" cols="80"></textarea>
+        </div>
+        <button type="submit" class="btn btn-warning">Submit</button>
+      </form>
+    </div>
+
+</div>
