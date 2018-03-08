@@ -8,7 +8,7 @@
 
 ## Description
 
-The application assists users to create an account, login, and post news. Users could find news they are intereted, and see the details, users are also allowed to edit/delete/add comments on the news.
+The application assists users to find information about hiking and post their news. Users are also will be able to write comments on existing posts after creating thier accounts and logging in. Users could find news they are intereted, and see the details, users are also allowed to edit/delete/add comments on the news.
 
 ## Setup/Installation Requirements
 
